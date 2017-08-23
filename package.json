@@ -1,6 +1,6 @@
 {
   "name": "dyna-timeout",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Handle executions in timeouts",
   "repository": {
     "type": "git",
