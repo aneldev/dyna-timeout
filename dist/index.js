@@ -101,9 +101,13 @@ class DynaTimeout {
     }
     update(id, timeout, cb, ...args) {
         let currentItem = this._holder[id];
+        if (!currentItem) {
+            console.warn(`dyna-timeout: update: id [${id}] doesn't exist to update it`);
+            return;
+        }
         let cb_ = cb || (currentItem && currentItem.cb) || (() => { console.error('dyna-timeout: cb not defined using the update method'); });
         let timeout_ = timeout || (currentItem && currentItem.timeout);
-        let args_ = (args.length && args || false) || (currentItem && currentItem.args);
+        let args_ = (args.length && args || false) || (currentItem && currentItem.args) || [];
         this.cancel(id);
         this.add(id, timeout_, cb_, ...args_);
     }

@@ -27,9 +27,14 @@ export class DynaTimeout {
 
   public update(id: string, timeout?: number, cb?: Function, ...args): void {
     let currentItem:IItem=this._holder[id];
+    if (!currentItem) {
+      console.warn(`dyna-timeout: update: id [${id}] doesn't exist to update it`);
+      return;
+    }
+
     let cb_:Function= cb || (currentItem && currentItem.cb) || (() => {console.error('dyna-timeout: cb not defined using the update method')});
     let timeout_:number= timeout || (currentItem && currentItem.timeout);
-    let args_:any[]= (args.length && args || false) || (currentItem && currentItem.args);
+    let args_:any[]= (args.length && args || false) || (currentItem && currentItem.args) || [];
 
     this.cancel(id);
     this.add(id, timeout_, cb_, ...args_);
