@@ -104,4 +104,23 @@ describe('Dyna Timeout test', () => {
   });
 
 
+  it('should add a cb with id that will be changed', () => {
+    dynaTimeout.add('purple', 10, (...args) => setFlag('purple', ...args), 'purple1', 'purple2', 'purple3');
+    expect(dynaTimeout.length).toBe(1);
+  });
+  it('should chnage the id', () => {
+    expect(dynaTimeout.changeId('purple', 'cyan')).toBe(true);
+  });
+  it('should be call the cb with the changed id', (done: Function) => {
+    setTimeout(() => {
+      expect(dynaTimeout.length).toBe(0);
+      expect(Object.keys(flags).length).toBe(4);
+      expect(flags.purple[0]).toBe('purple1');
+      expect(flags.purple[1]).toBe('purple2');
+      expect(flags.purple[2]).toBe('purple3');
+      done();
+    }, 200)
+  });
+
+
 });

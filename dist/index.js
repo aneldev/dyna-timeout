@@ -92,9 +92,10 @@ class DynaTimeout {
             this.update(id, timeout, cb, ...args);
             return;
         }
-        this._holder[id] = {
+        let item = this._holder[id] = {
+            id,
             cb, timeout, args, timer: setTimeout((...args) => {
-                this.cancel(id);
+                this.cancel(item.id);
                 cb(...args);
             }, timeout, ...args)
         };
@@ -110,6 +111,15 @@ class DynaTimeout {
         let args_ = (args.length && args || false) || (currentItem && currentItem.args) || [];
         this.cancel(id);
         this.add(id, timeout_, cb_, ...args_);
+    }
+    changeId(oldId, newId) {
+        if (this._holder[oldId]) {
+            this._holder[newId] = this._holder[oldId];
+            this._holder[newId].id = newId;
+            delete this._holder[oldId];
+            return true;
+        }
+        return false;
     }
     cancel(id) {
         if (this._holder[id]) {
