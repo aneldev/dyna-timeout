@@ -83,36 +83,49 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-class DynaTimeout {
-    constructor() {
+var DynaTimeout = /** @class */ (function () {
+    function DynaTimeout() {
         this._holder = {};
     }
-    add(id, timeout, cb, ...args) {
+    DynaTimeout.prototype.add = function (id, timeout, cb) {
+        var _this = this;
+        var args = [];
+        for (var _i = 3; _i < arguments.length; _i++) {
+            args[_i - 3] = arguments[_i];
+        }
         if (this._holder[id]) {
-            this.update(id, timeout, cb, ...args);
+            this.update.apply(this, [id, timeout, cb].concat(args));
             return;
         }
-        let item = this._holder[id] = {
-            id,
-            cb, timeout, args, timer: setTimeout((...args) => {
-                this.cancel(item.id);
-                cb(...args);
-            }, timeout, ...args)
+        var item = this._holder[id] = {
+            id: id,
+            cb: cb, timeout: timeout, args: args, timer: setTimeout.apply(void 0, [function () {
+                    var args = [];
+                    for (var _i = 0; _i < arguments.length; _i++) {
+                        args[_i] = arguments[_i];
+                    }
+                    _this.cancel(item.id);
+                    cb.apply(void 0, args);
+                }, timeout].concat(args))
         };
-    }
-    update(id, timeout, cb, ...args) {
-        let currentItem = this._holder[id];
+    };
+    DynaTimeout.prototype.update = function (id, timeout, cb) {
+        var args = [];
+        for (var _i = 3; _i < arguments.length; _i++) {
+            args[_i - 3] = arguments[_i];
+        }
+        var currentItem = this._holder[id];
         if (!currentItem) {
-            console.warn(`dyna-timeout: update: id [${id}] doesn't exist to update it`);
+            console.warn("dyna-timeout: update: id [" + id + "] doesn't exist to update it");
             return;
         }
-        let cb_ = cb || (currentItem && currentItem.cb) || (() => { console.error('dyna-timeout: cb not defined using the update method'); });
-        let timeout_ = timeout || (currentItem && currentItem.timeout);
-        let args_ = (args.length && args || false) || (currentItem && currentItem.args) || [];
+        var cb_ = cb || (currentItem && currentItem.cb) || (function () { console.error('dyna-timeout: cb not defined using the update method'); });
+        var timeout_ = timeout || (currentItem && currentItem.timeout);
+        var args_ = (args.length && args || false) || (currentItem && currentItem.args) || [];
         this.cancel(id);
-        this.add(id, timeout_, cb_, ...args_);
-    }
-    changeId(oldId, newId) {
+        this.add.apply(this, [id, timeout_, cb_].concat(args_));
+    };
+    DynaTimeout.prototype.changeId = function (oldId, newId) {
         if (this._holder[oldId]) {
             this._holder[newId] = this._holder[oldId];
             this._holder[newId].id = newId;
@@ -120,23 +133,28 @@ class DynaTimeout {
             return true;
         }
         return false;
-    }
-    cancel(id) {
+    };
+    DynaTimeout.prototype.cancel = function (id) {
         if (this._holder[id]) {
             clearTimeout(this._holder[id].timer);
             delete this._holder[id];
         }
-    }
-    cancelAll() {
+    };
+    DynaTimeout.prototype.cancelAll = function () {
         Object.keys(this._holder).forEach(this.cancel.bind(this));
-    }
-    get length() {
-        return this.getIds().length;
-    }
-    getIds() {
+    };
+    Object.defineProperty(DynaTimeout.prototype, "length", {
+        get: function () {
+            return this.getIds().length;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DynaTimeout.prototype.getIds = function () {
         return Object.keys(this._holder);
-    }
-}
+    };
+    return DynaTimeout;
+}());
 exports.DynaTimeout = DynaTimeout;
 
 

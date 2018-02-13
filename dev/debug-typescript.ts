@@ -1,5 +1,5 @@
 declare let global: any, window: any;
-import {DynaTimeout} from '../src';
+import {DynaTimeout} from '../src/index';
 
 const dynaTimer = new DynaTimeout();
 window.dynaTimer = dynaTimer;

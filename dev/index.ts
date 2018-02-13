@@ -4,4 +4,4 @@ import "./mock-jest";
 
 import './debug-javascript';  // debug plain javascript
 import './debug-typescript';  // debug typescript code
-import '../tests/main.test'; // debug any test (experimental)
+import '../tests/scripts/main.test'; // debug any test (experimental)
